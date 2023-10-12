@@ -7,15 +7,19 @@ function App() {
   return (
     <Grid
       templateAreas={{
-        base: `"nav" "main"`,
+        base: `"nav" "main"`, //mobile device
         lg: `"nav nav" "aside main"`, //1024px
+      }}
+      templateColumns={{
+        base: "1fr", // one column to take all the space(mobile)
+        lg: "200px 1fr", //two columns to be shared(1024px)
       }}
     >
       <GridItem area="nav">
         <NavBar />
       </GridItem>
       <Show above="lg">
-        <GridItem area="aside">
+        <GridItem area="aside" paddingX={5}>
           <GenreList />
         </GridItem>
       </Show>
