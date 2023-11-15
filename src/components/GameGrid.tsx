@@ -1,18 +1,15 @@
-import { Text, SimpleGrid, Button, Box } from "@chakra-ui/react";
+import { Text, SimpleGrid, Button, Box, Spinner } from "@chakra-ui/react";
 
 import GameCard from "./GameCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
 import { Genre } from "../hooks/useGenres";
-import { GameQuery } from "../App";
+
 import useGames from "../hooks/useGames";
 import React from "react";
+import useGameQueryStore from "../store";
 
-interface Props {
-  gameQuery: GameQuery;
-}
-
-const GameGrid = ({ gameQuery }: Props) => {
+const GameGrid = () => {
   const {
     error,
     data: book,
@@ -20,11 +17,13 @@ const GameGrid = ({ gameQuery }: Props) => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useGames(gameQuery);
+  } = useGames();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   if (error) return <Text>{error.message}</Text>;
 
+  const fetchGamesCount =
+    book?.pages.reduce((acc, page) => acc + page.results.length, 0) || 0;
   return (
     <Box padding={5}>
       <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} spacing={5}>
@@ -45,6 +44,7 @@ const GameGrid = ({ gameQuery }: Props) => {
           </React.Fragment>
         ))}
       </SimpleGrid>
+
       {hasNextPage && (
         <Button onClick={() => fetchNextPage()} marginY={5}>
           {isFetchingNextPage ? "Loading..." : "Load More"}
